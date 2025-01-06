@@ -30,6 +30,7 @@ def build_center_expansion(s, left, right, center):
         else:
             break
     return center
+
 class Solution:
     def longestPalindrome(self, s: str) -> str:
         # Find the longest palindrome with center expansion
