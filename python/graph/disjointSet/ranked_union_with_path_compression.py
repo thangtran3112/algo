@@ -8,6 +8,8 @@ class UnionFind:
         self.root = [i for i in range(size)]
         self.rank = [1] * size
 
+    # Time complexity: O(alpha(n)) or O(1) average
+    # where alpha is the inverse Ackermann function, which grows very slowly
     def find(self, x: int) -> int:
         if self.root[x] == x:
             return x
@@ -17,7 +19,8 @@ class UnionFind:
         self.root[x] = self.find(self.root[x])
         return self.root[x]
 
-    # Time complexity: O(log n) amortized
+    # Time complexity: O(alpha(n)) or O(1) average
+    # where alpha is the inverse Ackermann function, which grows very slowly
     def union(self, x: int, y: int) -> None:
         root_x = self.find(x)
         root_y = self.find(y)
@@ -31,7 +34,8 @@ class UnionFind:
             self.root[root_y] = root_x
             self.rank[root_x] += 1
 
-    # Time complexity: O(log n) amortized
+    # Time complexity: O(alpha(n)) or O(1) average
+    # where alpha is the inverse Ackermann function, which grows very slowly
     def connected(self, x: int, y: int) -> bool:
         return self.find(x) == self.find(y)
 

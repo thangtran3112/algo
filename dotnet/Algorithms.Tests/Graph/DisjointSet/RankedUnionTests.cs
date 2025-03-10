@@ -1,5 +1,3 @@
-using System;
-using Xunit;
 using Algorithms.Core.Graph.DisjointSet;
 
 namespace Algorithms.Tests.Graph.DisjointSet
