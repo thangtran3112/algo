@@ -44,8 +44,12 @@ class UnionFind:
 
     def count_roots(self) -> int:
         size: int = len(self.parent)
-        all_roots: set[int] = {self.find(i) for i in range(size)}  # Collect unique roots
-        return len(all_roots)  # Return the number of unique roots
+        # all_roots: set[int] = {self.find(i) for i in range(size)}  # Slow performance, as it could be NlogN
+        root_counts = 0
+        for i in range(size):
+            if self.parent[i] == i:
+                root_counts += 1
+        return root_counts  # Return the number of unique roots
     
 class Solution:
     def validTree(self, n: int, edges: List[List[int]]) -> bool:
