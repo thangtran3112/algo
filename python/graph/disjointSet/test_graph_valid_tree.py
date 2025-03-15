@@ -41,24 +41,6 @@ class TestUnionFind:
         uf.union(0, 1)
         assert uf.isConnected(0, 1) is True
 
-    def test_count_roots_initial(self):
-        """Test count_roots with no unions (all separate)"""
-        uf = UnionFind(5)
-        assert uf.count_roots() == 5
-
-    def test_count_roots_after_unions(self):
-        """Test count_roots after some unions"""
-        uf = UnionFind(5)
-        uf.union(0, 1)
-        uf.union(2, 3)
-        # Should have 3 roots: [0, 2, 4]
-        assert uf.count_roots() == 3
-
-        # Connect all into one component
-        uf.union(0, 2)
-        uf.union(0, 4)
-        assert uf.count_roots() == 1
-
     def test_path_compression(self):
         """Test that path compression optimizes the tree structure"""
         uf = UnionFind(5)

@@ -16,6 +16,7 @@ class UnionFind:
     def __init__(self, size: int) -> None:
         self.parent: List[int] = [i for i in range(size)]
         self.rank: List[int] = [1] * size
+        self.root_count = size # there are size different root initially
 
     def find(self, i: int) -> int:
         if self.parent[i] != i:
@@ -37,19 +38,25 @@ class UnionFind:
             self.parent[root_y] = root_x
             self.rank[root_x] += 1
 
+        # every time we do a connection, the number of root will reduce by 1    
+        self.root_count -= 1
         return True
 
     def isConnected(self, x: int, y: int) -> bool:
         return self.find(x) == self.find(y)
+    
+    def optimized_count_roots(self) -> int:
+        return self.root_count
 
-    def count_roots(self) -> int:
-        size: int = len(self.parent)
-        # all_roots: set[int] = {self.find(i) for i in range(size)}  # Slow performance, as it could be NlogN
-        root_counts = 0
-        for i in range(size):
-            if self.parent[i] == i:
-                root_counts += 1
-        return root_counts  # Return the number of unique roots
+    # this counts_root has high time complexity than needed
+    # def count_roots(self) -> int:
+    #     size: int = len(self.parent)
+    #     # all_roots: set[int] = {self.find(i) for i in range(size)}  # Slow performance, as it could be NlogN
+    #     root_counts = 0
+    #     for i in range(size):
+    #         if self.parent[i] == i:
+    #             root_counts += 1
+    #     return root_counts  # Return the number of unique roots
     
 class Solution:
     def validTree(self, n: int, edges: List[List[int]]) -> bool:
@@ -62,4 +69,4 @@ class Solution:
                 return False
 
         # check if there is more than 1 root, the set is not all connected, it is an invalid tree
-        return uf.count_roots() == 1
+        return uf.optimized_count_roots() == 1

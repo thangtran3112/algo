@@ -87,5 +87,10 @@ namespace Algorithms.Core.Graph.DisjointSet
 
             return uf.CountRoots() == 1; // Check if all nodes are connected
         }
+
+        public GraphIsTree()
+        {
+
+        }
     }
 }

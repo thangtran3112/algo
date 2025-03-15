@@ -2,6 +2,7 @@ using System;
 using Xunit;
 using Algorithms.Core.Graph.DisjointSet;
 
+// dotnet test --filter "GraphIsTreeTests" 
 namespace Algorithms.Tests.Graph.DisjointSet
 {
     public class GraphIsTreeTests
