@@ -6,8 +6,15 @@ cd c:\Users\user\Documents\GitHub\algo\dotnet
 
 ## Run all tests
 
-dotnet test
+```zsh
+    dotnet clean
+    dotnet restore
+    dotnet build
+    dotnet test
+```
 
 ## Run specific test class
 
-dotnet test --filter "RankedUnionTests"
+```zsh
+    dotnet test --filter "RankedUnionTests"
+```
