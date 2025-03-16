@@ -1,5 +1,12 @@
 # Run unit tests
 
+## Setup Dotnet 9
+
+```zsh
+  dotnet --list-sdks
+  dotnet new globaljson
+```
+
 ## Navigate back to root directory
 
 cd c:\Users\user\Documents\GitHub\algo\dotnet
