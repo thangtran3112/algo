@@ -64,3 +64,26 @@ class Solution:
         
         return dfs(source)
         
+# same as recursion but using a stack instead.
+# Time complexity: O(V+E) where V is the number of vertices and E is the number of edges.
+class SolutionWithStack:
+    def validPath(self, n: int, edges: List[List[int]], source: int, destination: int) -> bool:
+        visited = set()
+        graph = defaultdict(list)
+        for u, v in edges:
+            graph[u].append(v)
+            graph[v].append(u)
+
+        stack = [source]
+        while stack:
+            # pop the last element from the stack
+            node = stack.pop()
+
+            if node == destination:
+                return True
+            if node not in visited:
+                visited.add(node)
+                for neighbor in graph[node]:
+                    if neighbor not in visited:
+                        stack.append(neighbor)
+        return False
