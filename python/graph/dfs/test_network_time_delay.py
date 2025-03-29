@@ -1,9 +1,9 @@
 import pytest
-from network_time_delay import SimplifiedDijkstra, EdgeRelaxationDijkstra, SimplifiedEdgeRelaxDijkstra
+from network_time_delay import SolutionDFS
 
-@pytest.fixture(params=[SimplifiedDijkstra, EdgeRelaxationDijkstra, SimplifiedEdgeRelaxDijkstra])
-def solution(request):
-    return request.param()
+@pytest.fixture
+def solution():
+    return SolutionDFS()
 
 def test_example_1(solution):
     times = [[2, 1, 1], [2, 3, 1], [3, 4, 1]]
