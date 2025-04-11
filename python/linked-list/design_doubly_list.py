@@ -38,99 +38,127 @@ Constraints:
 Please do not use the built-in LinkedList library.
 At most 2000 calls will be made to get, addAtHead, addAtTail, addAtIndex and deleteAtIndex.
 """
-# Singly linked list
-class Node:
-    def __init__(self, val):
-        self.val = val
+class ListNode:
+    def __init__(self, x):
+        self.val = x
         self.next = None
+        self.prev = None
 
-class MyLinkedList:
-
+# Doubly linked list
+class MyLinkedList(object):
     def __init__(self):
         self.size = 0
-        self.head = Node(0)  # pseudo-head, sentinel node
+        # sentinel nodes as pseudo-head and pseudo-tail
+        self.head = ListNode(0)
+        self.tail = ListNode(0)
+        self.head.next = self.tail
+        self.tail.prev = self.head
 
-    def get(self, index: int) -> int:
+    def get(self, index):
         """
         Get the value of the index-th node in the linked list. If the index is invalid, return -1.
-        index goes from [0,..,size-1]
-        * get(0) will give the first element, not including the sentinel node
         """
         if index < 0 or index >= self.size:
             return -1
-        prev = self.head
-        # sentinel->1->2->3->4. index = 2, delete node 3
-        for _ in range(index + 1):
-            # need to loop 3 times from sentinel,
-            # thus we use range(index + 1), when index = 2, we have range(3) or (0,1,2)
-            prev = prev.next
-        return prev.val
+        
+        # choose the fastest way: from head or from tail
+        if index + 1 < self.size - index:
+            curr = self.head
+            for _ in range(index + 1):
+                curr = curr.next
+        else:
+            curr = self.tail
+            for _ in range(self.size - index):
+                curr = curr.prev
 
-    def addAtHead(self, val: int) -> None:
-        self.addAtIndex(0, val)
+        return curr.val
 
-    def addAtTail(self, val: int) -> None:
+    def addAtHead(self, val):
+        """
+        Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list.
+        """
+        pred, succ = self.head, self.head.next
+        self.size += 1
+        to_add = ListNode(val)
+        to_add.prev = pred
+        to_add.next = succ
+        pred.next = to_add
+        succ.prev = to_add
+    
+    def addAtTail(self, val):
         """
         Append a node of value val to the last element of the linked list.
         """
-        self.addAtIndex(self.size, val)
+        succ, pred = self.tail, self.tail.prev
+        self.size += 1
+        to_add = ListNode(val)
+        to_add.prev = pred
+        to_add.next = succ
+        pred.next = to_add
+        succ.prev = to_add
+        
 
-    def addAtIndex(self, index: int, val: int) -> None:
+    def addAtIndex(self, index, val):
         """
         Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted.
-        index goes from 0,1,2,..,size.
-        * In which addAtIndex(0, val) mean add to head
-        * addAtIndex(size, val) will be addAtTail()
+        Notes: addAtIndex will start from [1,..,size], it will not be [0,..,size-1]
         """
+        # If index is greater than the length, 
+        # the node will not be inserted.
         if index > self.size:
             return
-
+        
+        # [so weird] If index is negative, 
+        # the node will be inserted at the head of the list.
         if index < 0:
-            index = 0
+            index = 0 # sentinent index
+        
+        # go to index from head or tail, depends of which one is nearer
+        if index < self.size - index:
+            pred = self.head
+            for _ in range(index):
+                pred = pred.next
+            succ = pred.next
+        else:
+            succ = self.tail
+            for _ in range(self.size - index):
+                succ = succ.prev
+            pred = succ.prev
 
+        # Insertion itself
         self.size += 1
+        to_add = ListNode(val)
+        to_add.prev = pred
+        to_add.next = succ
+        pred.next = to_add
+        succ.prev = to_add
 
-        # find the predecessor of the node to be added 
-        pred = self.head
-
-        # 1->2->3->4, index=2, new value = 5, we have 1->2->5->3->4
-        for _ in range(index):
-            # _ is in (0, 1), as index = 2
-            pred = pred.next
-            # pred comes to 2, since we have a psedo sentinel head node
-
-        # break down 2->3 connection, and insert 5. the result will be 2->5->3
-        new_node = Node(val)
-        new_node.next = pred.next
-        pred.next = new_node
-
-    def deleteAtIndex(self, index: int) -> None:
+    def deleteAtIndex(self, index):
         """
         Delete the index-th node in the linked list, if the index is valid.
-        index goes from 0,1,2,..,size-1
+        Index is within [0,..,size-1]
         """
+        # If the index is invalid, do nothing
         if index < 0 or index >= self.size:
             return
+        # Find the pred and succ of the node to be deleted
+        if index < self.size - index:
+            pred = self.head
+            for _ in range(index):
+                pred = pred.next
+            succ = pred.next.next
+        else:
+            succ = self.tail
+            for _ in range(self.size - index - 1):
+                succ = succ.prev
+            pred = succ.prev.prev
+
+        # delete pred.next
         self.size -= 1
+        pred.next = succ
+        succ.prev = pred
 
-        # pseudo_head->1->2->3->4, index=2, delete node=3
-        prev = self.head
-        for _ in range(index):
-            # when index = 2, _ will be in (0,1). Loop will run 2 times
-            prev = prev.next
-        # after the loop, prev will be at node 2
-        # delete prev.next 
-        prev.next = prev.next.next
-
-# Your MyLinkedList object will be instantiated and called as such:
-# obj = MyLinkedList()
-# param_1 = obj.get(index)
-# obj.addAtHead(val)
-# obj.addAtTail(val)
-# obj.addAtIndex(index,val)
-# obj.deleteAtIndex(index)
-
-# TEST CASES
+# TESTING SECTION
 import pytest
 
 @pytest.fixture
