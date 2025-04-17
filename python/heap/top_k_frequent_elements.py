@@ -145,3 +145,92 @@ def test_edge_case_k_1(solution):
     nums = [1, 1, 2, 2, 2, 3]
     k = 1
     assert solution.topKFrequent(nums, k) == [2]
+
+def test_all_same_frequency(solution):
+    """Test when all elements have the same frequency."""
+    nums = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5]
+    k = 3
+    result = solution.topKFrequent(nums, k)
+    assert len(result) == 5  # All elements have same frequency, so all are returned
+    assert set(result) == {1, 2, 3, 4, 5}
+
+def test_ties_at_kth_position(solution):
+    """Test behavior when there are ties at the k-th position."""
+    nums = [1, 1, 2, 2, 3, 3, 4, 4, 5]  # Elements 1-4 appear twice, 5 appears once
+    k = 4
+    result = solution.topKFrequent(nums, k)
+    assert len(result) == 4
+    assert set(result).issubset({1, 2, 3, 4})
+
+def test_large_input_performance(solution):
+    """Test performance with a large input array."""
+    # Create a large array with predictable frequencies
+    nums = []
+    for i in range(100):
+        nums.extend([i] * (100 - i))  # Element i appears (100-i) times
+    
+    k = 10
+    result = solution.topKFrequent(nums, k)
+    
+    # The most frequent elements should be 0-9
+    expected = list(range(10))
+    assert all(num in expected for num in result)
+    assert len(result) == 10
+
+def test_with_sparse_frequencies(solution):
+    """Test with sparse frequency distribution."""
+    nums = [1] * 100 + [2] * 10 + [3]  # 1 appears 100 times, 2 appears 10 times, 3 once
+    k = 2
+    result = solution.topKFrequent(nums, k)
+    assert sorted(result) == [1, 2]
+
+def test_extreme_frequency_differences(solution):
+    """Test with extreme differences in frequency."""
+    nums = [1] * 1000 + [2] * 10 + list(range(3, 30))  # 1 appears 1000 times, 2 appears 10 times
+    k = 1
+    assert solution.topKFrequent(nums, k) == [1]
+
+def test_with_random_data(solution):
+    """Test with random data."""
+    import random
+    random.seed(42)  # For reproducibility
+    
+    # Generate random data with controllable frequencies
+    nums = []
+    expected_top = []
+    
+    # Add top k elements with high frequencies
+    for i in range(5):
+        freq = random.randint(50, 100)
+        nums.extend([i] * freq)
+        expected_top.append(i)
+    
+    # Add other elements with lower frequencies
+    for i in range(5, 20):
+        freq = random.randint(1, 30)
+        nums.extend([i] * freq)
+    
+    # Shuffle the array
+    random.shuffle(nums)
+    
+    k = 5
+    result = solution.topKFrequent(nums, k)
+    
+    # All elements in expected_top should be in result
+    assert all(x in result for x in expected_top)
+    assert len(result) == k
+
+if __name__ == "__main__":
+    # Run tests manually
+    solution_instance = Solution()
+    test_examples = [
+        ([1, 1, 1, 2, 2, 3], 2),
+        ([1], 1),
+        ([1, 2, 2, 3, 3, 3], 1)
+    ]
+    
+    for nums, k in test_examples:
+        print(f"Input: nums = {nums}, k = {k}")
+        print(f"Output: {solution_instance.topKFrequent(nums, k)}")
+        print()
+
