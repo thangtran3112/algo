@@ -36,6 +36,9 @@ word in search consist of '.' or lowercase English letters.
 There will be at most 2 dots in word for search queries.
 At most 104 calls will be made to addWord and search.
 """
+from collections import defaultdict
+
+
 class TrieNode:
     def __init__(self):
         self.children = {}
@@ -87,14 +90,33 @@ class WordDictionary:
         
     def search(self, word):
         return self.search_from(self.root, word)
+    
+# Bad solution, Time O(n * m)
+class WordDictionaryWithHashMap:
+    def __init__(self):
+        self.dic = defaultdict(set)
+
+    def addWord(self, word: str) -> None:
+        self.dic[len(word)].add(word)
+
+    def search(self, word: str) -> bool:
+        m = len(word)
+        for dict_word in self.dic[m]:
+            i = 0
+            while i < m and (dict_word[i] == word[i] or word[i] == "."):
+                i += 1
+            if i == m:
+                return True
+        return False
 
 # === TEST CASES ===
 import pytest  # noqa: E402
 
-@pytest.fixture
-def word_dictionary():
-    """Provides an instance of the WordDictionary class."""
-    return WordDictionary()
+@pytest.fixture(params=[WordDictionary, WordDictionaryWithHashMap],
+                ids=["Trie", "HashMap"])
+def word_dictionary(request):
+    """Provides instances of both WordDictionary implementations."""
+    return request.param()
 
 def test_example_from_problem(word_dictionary):
     """Test the example sequence from the problem description."""
