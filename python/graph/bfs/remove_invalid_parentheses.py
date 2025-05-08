@@ -1,4 +1,5 @@
 # https://leetcode.com/problems/remove-invalid-parentheses/description/
+# related: # https://leetcode.com/problems/minimum-remove-to-make-valid-parentheses/description/
 """
 Given a string s that contains parentheses and letters, remove the minimum number of invalid parentheses to make the input string valid.
 
@@ -112,6 +113,7 @@ class SolutionBFSCountBracket:
                     found = True
                     # only try to find any variant string at this layer. skip next layer
                     result.append(curr_str)
+                # explore next layer of not found
                 if not found:
                     for i in range(len(curr_str)):
                         if curr_str[i] != ')' and curr_str[i] != '(':
